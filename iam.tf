@@ -1,6 +1,9 @@
 data "aws_iam_policy_document" "assume_policy" {
   statement {
-    actions = ["sts:AssumeRole"]
+    actions = [
+      "sts:AssumeRole",
+      "sts:TagSession"
+    ]
     principals {
       type = "Service"
       identifiers = [
