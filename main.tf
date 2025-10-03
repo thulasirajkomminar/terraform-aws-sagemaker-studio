@@ -34,21 +34,6 @@ resource "aws_sagemaker_domain" "default" {
   }
 }
 
-resource "aws_sagemaker_studio_lifecycle_config" "jupyter" {
-  studio_lifecycle_config_name     = "lcc-jupyter-server-autoshutdown"
-  studio_lifecycle_config_app_type = "JupyterServer"
-  studio_lifecycle_config_content  = filebase64("${path.module}/scripts/lcc_jupyter_server_autoshutdown.sh")
-  tags                             = var.tags
-}
-
-resource "aws_sagemaker_studio_lifecycle_config" "kernel" {
-  count                            = var.lcc_python_kernel != null ? 1 : 0
-  studio_lifecycle_config_name     = "lcc-python-kernel"
-  studio_lifecycle_config_app_type = "KernelGateway"
-  studio_lifecycle_config_content  = filebase64(var.lcc_python_kernel)
-  tags                             = var.tags
-}
-
 resource "aws_sagemaker_user_profile" "default" {
   for_each          = var.auth_mode == "IAM" ? { for user in var.user_profiles : user => true } : {}
   domain_id         = aws_sagemaker_domain.default.id
