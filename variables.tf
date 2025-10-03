@@ -91,6 +91,22 @@ variable "security_groups" {
   description = "The security groups"
 }
 
+variable "tags" {
+  type        = map(string)
+  description = "A mapping of tags to assign to the resources"
+}
+
+variable "tag_propagation" {
+  type        = string
+  default     = "DISABLED"
+  description = "Indicates whether custom tag propagation is supported for the domain"
+
+  validation {
+    condition     = contains(["ENABLED", "DISABLED"], var.tag_propagation)
+    error_message = "Valid values are: `ENABLED` and `DISABLED`"
+  }
+}
+
 variable "subnet_ids" {
   type        = list(string)
   description = "The subnet ids"
@@ -105,20 +121,4 @@ variable "user_profiles" {
 variable "vpc_id" {
   type        = string
   description = "The VPC id"
-}
-
-variable "tag_propagation" {
-  type        = string
-  default     = "DISABLED"
-  description = "Indicates whether custom tag propagation is supported for the domain"
-
-  validation {
-    condition     = contains(["ENABLED", "DISABLED"], var.tag_propagation)
-    error_message = "Valid values are: `ENABLED` and `DISABLED`"
-  }
-}
-
-variable "tags" {
-  type        = map(string)
-  description = "A mapping of tags to assign to the resources"
 }
