@@ -14,14 +14,35 @@ resource "aws_sagemaker_domain" "default" {
     execution_role  = var.role_arn != null ? var.role_arn : aws_iam_role.default[0].arn
     security_groups = var.security_groups
 
-    dynamic "jupyter_server_app_settings" {
-      for_each = var.jupyter_server_app_settings == null ? { create : true } : {}
+    dynamic "jupyter_lab_app_settings" {
+      for_each = var.default_space_jupyter_lab_app_settings != null ? { create : var.default_space_jupyter_lab_app_settings } : {}
+
       content {
-        lifecycle_config_arns = [aws_sagemaker_studio_lifecycle_config.jupyterlab_autoshutdown[0].arn]
+        lifecycle_config_arns = lookup(jupyter_lab_app_settings.value, "lifecycle_config_arns", null)
+
+        app_lifecycle_management {
+          idle_settings {
+            idle_timeout_in_minutes     = lookup(jupyter_lab_app_settings.value.app_lifecycle_management.idle_settings, "idle_timeout_in_minutes", null)
+            lifecycle_management        = lookup(jupyter_lab_app_settings.value.app_lifecycle_management.idle_settings, "lifecycle_management", null)
+            max_idle_timeout_in_minutes = lookup(jupyter_lab_app_settings.value.app_lifecycle_management.idle_settings, "max_idle_timeout_in_minutes", null)
+            min_idle_timeout_in_minutes = lookup(jupyter_lab_app_settings.value.app_lifecycle_management.idle_settings, "min_idle_timeout_in_minutes", null)
+          }
+        }
 
         default_resource_spec {
-          instance_type        = "system"
-          lifecycle_config_arn = aws_sagemaker_studio_lifecycle_config.jupyterlab_autoshutdown[0].arn
+          instance_type = lookup(jupyter_lab_app_settings.value.default_resource_spec, "instance_type", null)
+        }
+      }
+    }
+
+    dynamic "kernel_gateway_app_settings" {
+      for_each = var.default_space_kernel_gateway_app_settings != null ? { create : var.default_space_kernel_gateway_app_settings } : {}
+
+      content {
+        custom_image {
+          app_image_config_name = lookup(kernel_gateway_app_settings.value.custom_image, "app_image_config_name", null)
+          image_name            = lookup(kernel_gateway_app_settings.value.custom_image, "image_name", null)
+          image_version_number  = lookup(kernel_gateway_app_settings.value.custom_image, "image_version_number", null)
         }
       }
     }
@@ -34,26 +55,57 @@ resource "aws_sagemaker_domain" "default" {
     default_landing_uri = "studio::"
 
     dynamic "code_editor_app_settings" {
-      for_each = var.code_editor_app_settings == null ? { create : true } : {}
+      for_each = var.default_user_code_editor_app_settings != null ? { create : var.default_user_code_editor_app_settings } : {}
 
       content {
-        lifecycle_config_arns = [aws_sagemaker_studio_lifecycle_config.codeeditor_autoshutdown[0].arn]
+        lifecycle_config_arns = lookup(code_editor_app_settings.value, "lifecycle_config_arns", null)
+
+        app_lifecycle_management {
+          idle_settings {
+            idle_timeout_in_minutes     = lookup(code_editor_app_settings.value.app_lifecycle_management.idle_settings, "idle_timeout_in_minutes", null)
+            lifecycle_management        = lookup(code_editor_app_settings.value.app_lifecycle_management.idle_settings, "lifecycle_management", null)
+            max_idle_timeout_in_minutes = lookup(code_editor_app_settings.value.app_lifecycle_management.idle_settings, "max_idle_timeout_in_minutes", null)
+            min_idle_timeout_in_minutes = lookup(code_editor_app_settings.value.app_lifecycle_management.idle_settings, "min_idle_timeout_in_minutes", null)
+          }
+        }
 
         default_resource_spec {
-          instance_type        = "ml.t3.medium"
-          lifecycle_config_arn = aws_sagemaker_studio_lifecycle_config.codeeditor_autoshutdown[0].arn
+          instance_type        = lookup(code_editor_app_settings.value.default_resource_spec, "instance_type", null)
+          lifecycle_config_arn = lookup(code_editor_app_settings.value.default_resource_spec, "lifecycle_config_arn", null)
         }
       }
     }
 
     dynamic "jupyter_lab_app_settings" {
-      for_each = var.jupyter_lab_app_settings == null ? { create : true } : {}
+      for_each = var.default_user_jupyter_lab_app_settings != null ? { create : var.default_user_jupyter_lab_app_settings } : {}
+
       content {
-        lifecycle_config_arns = [aws_sagemaker_studio_lifecycle_config.jupyterlab_autoshutdown[0].arn]
+        lifecycle_config_arns = lookup(jupyter_lab_app_settings.value, "lifecycle_config_arns", null)
+
+        app_lifecycle_management {
+          idle_settings {
+            idle_timeout_in_minutes     = lookup(jupyter_lab_app_settings.value.app_lifecycle_management.idle_settings, "idle_timeout_in_minutes", null)
+            lifecycle_management        = lookup(jupyter_lab_app_settings.value.app_lifecycle_management.idle_settings, "lifecycle_management", null)
+            max_idle_timeout_in_minutes = lookup(jupyter_lab_app_settings.value.app_lifecycle_management.idle_settings, "max_idle_timeout_in_minutes", null)
+            min_idle_timeout_in_minutes = lookup(jupyter_lab_app_settings.value.app_lifecycle_management.idle_settings, "min_idle_timeout_in_minutes", null)
+          }
+        }
 
         default_resource_spec {
-          instance_type        = "ml.t3.medium"
-          lifecycle_config_arn = aws_sagemaker_studio_lifecycle_config.jupyterlab_autoshutdown[0].arn
+          instance_type        = lookup(jupyter_lab_app_settings.value.default_resource_spec, "instance_type", null)
+          lifecycle_config_arn = lookup(jupyter_lab_app_settings.value.default_resource_spec, "lifecycle_config_arn", null)
+        }
+      }
+    }
+
+    dynamic "kernel_gateway_app_settings" {
+      for_each = var.default_user_kernel_gateway_app_settings != null ? { create : var.default_user_kernel_gateway_app_settings } : {}
+
+      content {
+        custom_image {
+          app_image_config_name = lookup(kernel_gateway_app_settings.value.custom_image, "app_image_config_name", null)
+          image_name            = lookup(kernel_gateway_app_settings.value.custom_image, "image_name", null)
+          image_version_number  = lookup(kernel_gateway_app_settings.value.custom_image, "image_version_number", null)
         }
       }
     }
