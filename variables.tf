@@ -37,6 +37,12 @@ variable "default_space_jupyter_lab_app_settings" {
   description = "The default settings for the JupyterLab application for the spaces"
 }
 
+variable "default_space_kernel_gateway_app_settings" {
+  type        = any
+  default     = null
+  description = "The default settings for the Kernel Gateway application for the spaces"
+}
+
 variable "default_user_code_editor_app_settings" {
   type        = any
   default     = null
@@ -47,6 +53,12 @@ variable "default_user_jupyter_lab_app_settings" {
   type        = any
   default     = null
   description = "The default settings for the JupyterLab application for the users"
+}
+
+variable "default_user_kernel_gateway_app_settings" {
+  type        = any
+  default     = null
+  description = "The default settings for the Kernel Gateway application for the users"
 }
 
 variable "kms_key_id" {

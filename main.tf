@@ -34,6 +34,18 @@ resource "aws_sagemaker_domain" "default" {
         }
       }
     }
+
+    dynamic "kernel_gateway_app_settings" {
+      for_each = var.default_space_kernel_gateway_app_settings != null ? { create : var.default_space_kernel_gateway_app_settings } : {}
+
+      content {
+        custom_image {
+          app_image_config_name = lookup(kernel_gateway_app_settings.value.custom_image, "app_image_config_name", null)
+          image_name            = lookup(kernel_gateway_app_settings.value.custom_image, "image_name", null)
+          image_version_number  = lookup(kernel_gateway_app_settings.value.custom_image, "image_version_number", null)
+        }
+      }
+    }
   }
 
   default_user_settings {
@@ -82,6 +94,18 @@ resource "aws_sagemaker_domain" "default" {
         default_resource_spec {
           instance_type        = lookup(jupyter_lab_app_settings.value.default_resource_spec, "instance_type", null)
           lifecycle_config_arn = lookup(jupyter_lab_app_settings.value.default_resource_spec, "lifecycle_config_arn", null)
+        }
+      }
+    }
+
+    dynamic "kernel_gateway_app_settings" {
+      for_each = var.default_user_kernel_gateway_app_settings != null ? { create : var.default_user_kernel_gateway_app_settings } : {}
+
+      content {
+        custom_image {
+          app_image_config_name = lookup(kernel_gateway_app_settings.value.custom_image, "app_image_config_name", null)
+          image_name            = lookup(kernel_gateway_app_settings.value.custom_image, "image_name", null)
+          image_version_number  = lookup(kernel_gateway_app_settings.value.custom_image, "image_version_number", null)
         }
       }
     }
