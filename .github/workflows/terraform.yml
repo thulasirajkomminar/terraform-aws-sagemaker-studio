@@ -16,13 +16,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v4
 
       - name: Setup Terraform Linters
-        uses: terraform-linters/setup-tflint@v4
+        uses: terraform-linters/setup-tflint@v6
         with:
           github_token: ${{ env.GITHUB_TOKEN }}
 
@@ -42,7 +42,7 @@ jobs:
         id: lint
         run: tflint --no-color --recursive --format compact
 
-      - uses: actions/github-script@v6
+      - uses: actions/github-script@v8
         if: github.event_name == 'pull_request' || always()
         with:
           github-token: ${{ env.GITHUB_TOKEN }}
@@ -86,12 +86,12 @@ jobs:
                 body: output
               })
             }
-  
+
   tfsec:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Terraform security scan
         uses: aquasecurity/tfsec-action@v1.0.3
@@ -112,7 +112,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run Checkov
-        uses: bridgecrewio/checkov-action@v12.2577.0
+        uses: bridgecrewio/checkov-action@v12.1347.0
         with:
           container_user: 1000
           directory: "/"
@@ -127,12 +127,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Render terraform docs inside the README.md and push changes back to PR branch
-        uses: terraform-docs/gh-actions@v1.0.0
+        uses: terraform-docs/gh-actions@v1.4.1
         with:
           args: --sort-by required
           git-commit-message: "docs(readme): update module usage"
