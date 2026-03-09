@@ -31,22 +31,22 @@ variable "auth_mode" {
   }
 }
 
-variable "code_editor_app_settings" {
+variable "default_space_jupyter_lab_app_settings" {
   type        = any
   default     = null
-  description = "The Code Editor application settings"
+  description = "The default settings for the JupyterLab application for the spaces"
 }
 
-variable "jupyter_lab_app_settings" {
+variable "default_user_code_editor_app_settings" {
   type        = any
   default     = null
-  description = "The settings for the JupyterLab application"
+  description = "The default Code Editor application settings for the users"
 }
 
-variable "jupyter_server_app_settings" {
+variable "default_user_jupyter_lab_app_settings" {
   type        = any
   default     = null
-  description = "The Jupyter server's app settings"
+  description = "The default settings for the JupyterLab application for the users"
 }
 
 variable "kms_key_id" {
