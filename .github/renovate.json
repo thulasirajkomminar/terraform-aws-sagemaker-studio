@@ -1,0 +1,129 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    ":dependencyDashboard",
+    ":separatePatchReleases",
+    ":rebaseStalePrs"
+  ],
+  "labels": [
+    "dependencies",
+    "terraform"
+  ],
+  "assigneesFromCodeOwners": true,
+  "reviewersFromCodeOwners": true,
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2,
+  "rebaseWhen": "behind-base-branch",
+  "schedule": [
+    "before 9am on Monday"
+  ],
+  "packageRules": [
+    {
+      "description": "Group all Terraform AWS provider patch/minor bumps",
+      "matchManagers": [
+        "terraform"
+      ],
+      "matchDepTypes": [
+        "provider"
+      ],
+      "matchPackagePatterns": [
+        "hashicorp/aws"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "AWS provider (minor/patch)",
+      "automerge": false
+    },
+    {
+      "description": "Major provider bumps — never auto-merge, require review",
+      "matchManagers": [
+        "terraform"
+      ],
+      "matchDepTypes": [
+        "provider"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "groupName": "Provider major upgrades ⚠️",
+      "labels": [
+        "breaking-change",
+        "dependencies"
+      ],
+      "automerge": false
+    },
+    {
+      "description": "Group all other provider patches",
+      "matchManagers": [
+        "terraform"
+      ],
+      "matchDepTypes": [
+        "provider"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "groupName": "Provider patches",
+      "automerge": false
+    },
+    {
+      "description": "Module source bumps (git-based modules)",
+      "matchManagers": [
+        "terraform"
+      ],
+      "matchDepTypes": [
+        "module"
+      ],
+      "groupName": "Terraform module sources",
+      "automerge": false
+    },
+    {
+      "description": "Terraform core / required_version",
+      "matchManagers": [
+        "terraform"
+      ],
+      "matchDepTypes": [
+        "required_version"
+      ],
+      "groupName": "Terraform CLI version",
+      "automerge": false
+    },
+    {
+      "description": "Group GitHub Actions updates",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "groupName": "GitHub Actions",
+      "automerge": false
+    }
+  ],
+  "terraform": {
+    "enabled": true
+  },
+  "customManagers": [
+    {
+      "description": "Catch raw version strings in .terraform-version / .tool-versions",
+      "customType": "regex",
+      "fileMatch": [
+        "^\\.terraform-version$",
+        "^\\.tool-versions$"
+      ],
+      "matchStrings": [
+        "terraform\\s+(?<currentValue>[\\d\\.]+)"
+      ],
+      "depNameTemplate": "hashicorp/terraform",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v?(?<version>.*)$"
+    }
+  ],
+  "postUpdateOptions": [],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": [
+      "security"
+    ]
+  }
+}
