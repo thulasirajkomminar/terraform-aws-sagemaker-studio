@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base",
+    "config:recommended",
     ":dependencyDashboard",
     ":separatePatchReleases",
     ":rebaseStalePrs"
@@ -27,15 +27,15 @@
       "matchDepTypes": [
         "provider"
       ],
-      "matchPackagePatterns": [
-        "hashicorp/aws"
-      ],
       "matchUpdateTypes": [
         "minor",
         "patch"
       ],
       "groupName": "AWS provider (minor/patch)",
-      "automerge": false
+      "automerge": false,
+      "matchPackageNames": [
+        "/hashicorp/aws/"
+      ]
     },
     {
       "description": "Major provider bumps — never auto-merge, require review",
@@ -107,9 +107,9 @@
     {
       "description": "Catch raw version strings in .terraform-version / .tool-versions",
       "customType": "regex",
-      "fileMatch": [
-        "^\\.terraform-version$",
-        "^\\.tool-versions$"
+      "managerFilePatterns": [
+        "/^\\.terraform-version$/",
+        "/^\\.tool-versions$/"
       ],
       "matchStrings": [
         "terraform\\s+(?<currentValue>[\\d\\.]+)"
