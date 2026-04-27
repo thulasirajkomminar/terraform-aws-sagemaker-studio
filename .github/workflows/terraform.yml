@@ -42,7 +42,7 @@ jobs:
         id: lint
         run: tflint --no-color --recursive --format compact
 
-      - uses: actions/github-script@v8
+      - uses: actions/github-script@v9
         if: github.event_name == 'pull_request' || always()
         with:
           github-token: ${{ env.GITHUB_TOKEN }}
