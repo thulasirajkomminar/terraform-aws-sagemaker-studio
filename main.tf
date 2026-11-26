@@ -1,7 +1,11 @@
 resource "aws_sagemaker_domain" "default" {
   region                        = var.region
   app_network_access_type       = var.app_network_access_type
-  app_security_group_management = var.app_security_group_management
+  app_security_group_management = (
+      var.app_network_access_type == "VpcOnly"
+      ? var.app_security_group_management
+      : null
+  )
   auth_mode                     = var.auth_mode
   domain_name                   = var.name
   kms_key_id                    = var.kms_key_id
